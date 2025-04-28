@@ -1,0 +1,17 @@
+# deploy-pipeline.yml (Azure DevOps/GitHub Actions)
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Authenticate to Microsoft Graph
+      $token = (Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token
+      $headers = @{ Authorization = "Bearer $token" }
+
+      # Deploy Compliance Policy
+      $policy = Get-Content "./compliance-policies/defender-realtime-compliance.json" | ConvertFrom-Json
+      Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/deviceManagement/deviceCompliancePolicies" `
+                        -Method Post `
+                        -Headers $headers `
+                        -Body ($policy | ConvertTo-Json -Depth 5) `
+                        -ContentType "application/json"
