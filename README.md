@@ -61,7 +61,7 @@ Connect-MgGraph -ClientId "app-id" -TenantId "tenant-id" `
   -CertificateThumbprint "cert-thumbprint"
 ```
 📋 Script Usage
-Before First Use Modify Connect-M365Services accordingly for username etc.
+Before First Use Please Modify Connect-M365Services accordingly for username etc.
 Add -Credential parameter for non-interactive use
 ```powershell
 # Modify these in Connect-M365Services.ps1
