@@ -25,9 +25,9 @@ A collection of PowerShell scripts for automating Microsoft 365 administration t
   ```powershell
   Install-Module -Name ExchangeOnlineManagement,Microsoft.Online.SharePoint.PowerShell,MicrosoftTeams,AzureAD -Force -AllowClobber
 
-##Before using Connect ps1 script:
-Modify Connect-M365Services accordingly for username etc.
 
+## Before using Connect ps1 script do the following:
+Modify Connect-M365Services accordingly for username etc.
 Add -Credential parameter for non-interactive use
 
 # Basic connection (all services)
