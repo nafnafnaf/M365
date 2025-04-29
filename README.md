@@ -87,6 +87,10 @@ Skip Teams connection
 ```powershell
 .\Connect-M365Services.ps1 -SkipTeams
 ```
+Store credentials securely:
+```powershell
+Get-Credential | Export-Clixml -Path "./secure/cred.xml" -Force
+```
 Specify tenant ID (for multi-tenant environments)
 ```powershell
 .\Connect-M365Services.ps1 -TenantId "yourdomain.onmicrosoft.com"
