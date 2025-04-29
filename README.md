@@ -25,15 +25,63 @@ A collection of PowerShell scripts for automating Microsoft 365 administration t
   ```powershell
   Install-Module -Name ExchangeOnlineManagement,Microsoft.Online.SharePoint.PowerShell,MicrosoftTeams,AzureAD -Force -AllowClobber
 
+🖥️ VS Code Configuration
+Recommended Extensions
+PowerShell
 
-## Before using Connect ps1 script do the following:
-Modify Connect-M365Services accordingly for username etc.
+Azure Account
+
+Microsoft Graph Tools
+
+settings.json
+
+```json
+
+{
+  "powershell.powerShellExePath": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+  "azure.tenant": "yourtenant.onmicrosoft.com",
+  "powershell.codeFormatting.preset": "OTBS",
+  "files.autoSave": "afterDelay"
+}
+```
+🔐 Authentication Methods
+Interactive Login (MFA Supported)
+```powershel
+Connect-MgGraph -Scopes "User.Read.All","Group.ReadWrite.All"
+Connect-AzureAD
+```
+Non-Interactive with Credentials
+```powershell
+$Credential = Get-Credential
+.\Connect-M365Services.ps1 -Credential $Credential -TenantId "contoso.onmicrosoft.com"
+```
+Certificate-Based Auth
+```powershell
+Connect-MgGraph -ClientId "app-id" -TenantId "tenant-id" `
+  -CertificateThumbprint "cert-thumbprint"
+```
+📋 Script Usage
+Before First Use Modify Connect-M365Services accordingly for username etc.
 Add -Credential parameter for non-interactive use
+```powershell
+# Modify these in Connect-M365Services.ps1
+$DefaultAdmin = "admin@contoso.onmicrosoft.com"
+$DefaultTenant = "contoso.onmicrosoft.com"```
+```
 
 Basic connection (all services)
  
 ```
 .\Connect-M365Services.ps1
+```
+```
+# Basic connection (all services)
+.\Connect-M365Services.ps1
+```
+
+# With specific parameters
+```
+.\Connect-M365Services.ps1 -SkipTeams -Credential (Import-Clixml "./secure/cred.xml")
 ```
 Skip Teams connection
 ```
