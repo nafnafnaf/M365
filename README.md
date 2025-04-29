@@ -71,23 +71,23 @@ $DefaultTenant = "contoso.onmicrosoft.com"```
 
 Basic connection (all services)
  
-```
+```powershell
 .\Connect-M365Services.ps1
 ```
-```
+```powershell
 # Basic connection (all services)
 .\Connect-M365Services.ps1
 ```
 
 # With specific parameters
-```
+```powershell
 .\Connect-M365Services.ps1 -SkipTeams -Credential (Import-Clixml "./secure/cred.xml")
 ```
 Skip Teams connection
-```
+```powershell
 .\Connect-M365Services.ps1 -SkipTeams
 ```
 Specify tenant ID (for multi-tenant environments)
-```
+```powershell
 .\Connect-M365Services.ps1 -TenantId "yourdomain.onmicrosoft.com"
 ```
