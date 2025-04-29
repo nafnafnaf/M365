@@ -30,14 +30,16 @@ A collection of PowerShell scripts for automating Microsoft 365 administration t
 Modify Connect-M365Services accordingly for username etc.
 Add -Credential parameter for non-interactive use
 
- Basic connection (all services)
+Basic connection (all services)
  
 ```
 .\Connect-M365Services.ps1
 ```
- Skip Teams connection
-```.\Connect-M365Services.ps1 -SkipTeams
+Skip Teams connection
 ```
- Specify tenant ID (for multi-tenant environments)
-```.\Connect-M365Services.ps1 -TenantId "yourdomain.onmicrosoft.com"
+.\Connect-M365Services.ps1 -SkipTeams
+```
+Specify tenant ID (for multi-tenant environments)
+```
+.\Connect-M365Services.ps1 -TenantId "yourdomain.onmicrosoft.com"
 ```
