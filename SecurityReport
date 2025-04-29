@@ -1,0 +1,3 @@
+# Export risky sign-ins
+Get-MgIdentityProtectionRiskyUser -All | 
+    Export-Csv -Path "./reports/risky_users.csv" -NoTypeInformation
