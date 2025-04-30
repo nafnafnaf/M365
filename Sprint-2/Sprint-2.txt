@@ -1,0 +1,7 @@
+Before requesting from Graph API, M365DSC requires an update for all its modules:
+Update-M365DSCDependencies  
+then you can procceed to requesting
+Export-M365DSCConfiguration -Components @("AADUser") -Credential $Credential -Path "$env:USERPROFILE\Documents" -FileName "AADConfig"
+
+exporting into txt file:
+Export-M365DSCConfiguration -Components @("AADUser") -Credential $Credential | Out-File -FilePath "$env:USERPROFILE\Documents\test.txt"
