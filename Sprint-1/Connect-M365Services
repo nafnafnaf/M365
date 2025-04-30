@@ -1,0 +1,153 @@
+<#
+.SYNOPSIS
+    Connects to Microsoft 365 services using modern authentication.
+.DESCRIPTION
+    Establishes connections to Exchange Online, SharePoint Online, Microsoft Teams, and Azure AD.
+    Supports MFA and uses the latest PowerShell modules.
+.NOTES
+    File Name      : Connect-M365Services.ps1
+    Prerequisite   : PowerShell 5.1 or later
+    Copyright      : MIT License
+#>
+
+#region Parameters
+param (
+    [Parameter(Mandatory=$false)]
+    [string]$TenantId,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$SkipTeams,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$SkipSharePoint
+)
+#endregion
+
+#region Initialization
+Write-Host "`n=== Microsoft 365 Connection Script ===`n" -ForegroundColor Cyan
+
+# Check if running in PowerShell 7+ (recommended for modern auth)
+if ($PSVersionTable.PSVersion.Major -ge 7) {
+    Write-Host "[INFO] Running on PowerShell $($PSVersionTable.PSVersion)" -ForegroundColor Green
+}
+else {
+    Write-Warning "Consider upgrading to PowerShell 7+ for better MFA support"
+}
+#endregion
+
+#region Functions
+function Connect-ExchangeOnline {
+    try {
+        # Check if module is installed
+        if (-not (Get-Module -Name ExchangeOnlineManagement -ListAvailable)) {
+            Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber -Scope CurrentUser
+        }
+
+        Write-Host "`nConnecting to Exchange Online..." -ForegroundColor Yellow
+        Connect-ExchangeOnline -ShowBanner:$false
+        
+        Write-Host "[SUCCESS] Exchange Online connected" -ForegroundColor Green
+    }
+    catch {
+        Write-Error "[FAILED] Exchange Online connection failed: $_"
+        throw
+    }
+}
+
+function Connect-SharePointOnline {
+    try {
+        if (-not (Get-Module -Name Microsoft.Online.SharePoint.PowerShell -ListAvailable)) {
+            Install-Module -Name Microsoft.Online.SharePoint.PowerShell -Force -AllowClobber -Scope CurrentUser
+        }
+
+        Write-Host "`nConnecting to SharePoint Online..." -ForegroundColor Yellow
+        $adminUrl = "https://$($TenantId.Split('@')[1])-admin.sharepoint.com"
+        Connect-SPOService -Url $adminUrl
+        
+        Write-Host "[SUCCESS] SharePoint Online connected" -ForegroundColor Green
+    }
+    catch {
+        Write-Error "[FAILED] SharePoint Online connection failed: $_"
+        throw
+    }
+}
+
+function Connect-MicrosoftTeams {
+    try {
+        if (-not (Get-Module -Name MicrosoftTeams -ListAvailable)) {
+            Install-Module -Name MicrosoftTeams -Force -AllowClobber -Scope CurrentUser
+        }
+
+        Write-Host "`nConnecting to Microsoft Teams..." -ForegroundColor Yellow
+        Connect-MicrosoftTeams
+        
+        Write-Host "[SUCCESS] Microsoft Teams connected" -ForegroundColor Green
+    }
+    catch {
+        Write-Error "[FAILED] Microsoft Teams connection failed: $_"
+        throw
+    }
+}
+
+function Connect-AzureAD {
+    try {
+        if (-not (Get-Module -Name AzureAD -ListAvailable)) {
+            Install-Module -Name AzureAD -Force -AllowClobber -Scope CurrentUser
+        }
+
+        Write-Host "`nConnecting to Azure AD..." -ForegroundColor Yellow
+        Connect-AzureAD
+        
+        Write-Host "[SUCCESS] Azure AD connected" -ForegroundColor Green
+    }
+    catch {
+        Write-Error "[FAILED] Azure AD connection failed: $_"
+        throw
+    }
+}
+#endregion
+
+#region Main Execution
+try {
+    # Install required modules if missing
+    if (-not (Get-Module -Name AzureAD -ListAvailable)) {
+        Install-Module -Name AzureAD -Force -AllowClobber -Scope CurrentUser
+    }
+
+    # Connect to Azure AD first (required for tenant context)
+    Connect-AzureAD
+
+    # Get tenant ID if not provided
+    if (-not $TenantId) {
+        $TenantId = (Get-AzureADTenantDetail).VerifiedDomains[0].Name
+        Write-Host "[INFO] Detected Tenant ID: $TenantId" -ForegroundColor Cyan
+    }
+
+    # Connect to services
+    Connect-ExchangeOnline
+    
+    if (-not $SkipSharePoint) {
+        Connect-SharePointOnline
+    }
+    
+    if (-not $SkipTeams) {
+        Connect-MicrosoftTeams
+    }
+
+    Write-Host "`n=== All connections completed successfully ===`n" -ForegroundColor Green
+    Write-Host "Available cmdlets:" -ForegroundColor Cyan
+    Write-Host "- Exchange Online: Get-Mailbox, Get-MailboxStatistics, etc."
+    Write-Host "- SharePoint: Get-SPOSite, Get-SPOUser, etc."
+    Write-Host "- Teams: Get-Team, Get-TeamChannel, etc."
+    Write-Host "- Azure AD: Get-AzureADUser, Get-AzureADGroup, etc.`n"
+}
+catch {
+    Write-Error "Script terminated with errors: $_"
+    exit 1
+}
+finally {
+    # Clean up (optional)
+    Disconnect-AzureAD -ErrorAction SilentlyContinue
+    Disconnect-ExchangeOnline -Confirm:$false -ErrorAction SilentlyContinue
+}
+#endregion
