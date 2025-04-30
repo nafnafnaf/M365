@@ -4,6 +4,7 @@
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Azure](https://img.shields.io/badge/Microsoft-365-0078D4.svg)
 
+https://nafnafnaf.github.io/M365/
 A collection of PowerShell scripts for automating Microsoft 365 administration tasks, including user management, reporting, and security configurations.
 
 ## 📦 Included Modules
