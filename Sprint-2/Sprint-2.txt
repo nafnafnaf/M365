@@ -1,6 +1,9 @@
 Before requesting from Graph API, M365DSC requires an update for all its modules:
 Update-M365DSCDependencies  
 then you can procceed to requesting
+List of Microsoft365DSC modules at:
+https://export.microsoft365dsc.com/#Office%20365
+
 Export-M365DSCConfiguration -Components @("AADUser") -Credential $Credential -Path "$env:USERPROFILE\Documents" -FileName "AADConfig"
 
 exporting into txt file:
