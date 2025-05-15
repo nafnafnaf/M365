@@ -1,0 +1,18 @@
+DECLARATIVE WAY:
+1) UPLOAD PARAMS TO POWERSHELL 
+# Replace these values with your actual credentials
+$params = @{
+    ApplicationId = "your-app-id"
+    TenantId = "your-tenant-id"
+    CertificateThumbprint = "your-cert-thumbprint"
+}
+2) APPLY THE CONFIG FILE:
+Start-DscConfiguration -Path "C:\DSCConfigs" -Wait -Verbose -Force
+
+DeployIntuneChromePolicy -OutputPath "C:\DSCConfigs" -ConfigurationData $params
+
+IMPERATIVE WAY:
+EXTERNALLY RUN:
+.\IntuneCatalogCustomPolicyWIN10.ps1 -ApplicationId "your-app-id" -TenantId "your-tenant-id" -CertificateThumbprint "your-thumbprint"
+APPLY THE CONFING FILE:
+Start-DscConfiguration -Path .\DeployIntuneChromePolicy -Wait -Verbose -Force
